@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz App</title>
+    <link href="quizz.css" rel="stylesheet"/>
+</head>
+<body>
+
+    <!-- Navbar -->
+    <div class="navbar">
+        <h1>Welcome to the Quiz</h1>
+    </div>
+
+    <!-- Quiz Container -->
+    <div class="quiz-container">
+        <!-- Progress Bar -->
+        <div class="progress-bar">
+            <div class="progress-bar-fill" id="progress"></div>
+        </div>
+
+        <!-- Question Section -->
+        <div class="content">
+            <div class="question" id="question">Loading question...</div>
+            <div class="options" id="options"></div>
+        </div>
+
+        <!-- Result Display -->
+        <div class="result" id="result" style="display: none;">
+            <h2 id="score-text">Your Score: 0</h2>
+        </div>
+
+        <!-- Retry Button -->
+        <div class="retry" id="retry" style="display: none;">
+            <button onclick="retryQuiz()">Retry</button>
+        </div>
+    </div>
+
+    
+
+
+
+<script>
+const quizData = [
+    {question: "What is the output of print(2 * 3 + 4) in Python?", options: [10, 14, 12, 8], answer: 0},
+    {question: "Which of the following is a valid variable name in Python?", options: ["2name", "_name", "name@", "class"], answer: 1},
+    {question: "What will 5 == 5.0 return in Python?", options: ["True", "False", "Error", "None"], answer: 0},
+    {question: "Which data structure follows the LIFO principle?", options: ["Queue", "Stack", "Linked list", "Tree"], answer: 1},
+    {question: "Which keyword is used to define a function in Python?", options: ["Function", "Define", "Def", "Fun"], answer: 2},
+    {question: "Which of the following is used to declare a constant variable in C?", options: ["Final", "Constant", "Const", "Let"], answer: 2},
+    {question: "Which of these is not a primitive data type in Java?", options: ["int", "string", "float", "boolean"], answer: 1},
+    {question: "Which keyword is used to create a class in Java?", options: ["class", "Class", "define", "new"], answer: 0},
+    {question: "Which function is used to read a string in C?", options: ["printf()", "scanf()", "gets()", "cin"], answer: 2},
+    {question: "Which sorting algorithm has the worst-case time complexity of O(n²)?", options: ["mergesort", "bubblesort", "heapsort", "quicksort"], answer: 1}
+];
+
+const questionE1 = document.getElementById("question");
+const optionsE1 = document.getElementById("options");
+const progressBarFill = document.getElementById("progress");
+const retryE1 = document.getElementById("retry");
+
+let currentQuestionIndex = 0;
+let score = 0;
+let attempts = 0;
+
+function loadQuestion() {
+    const currentQuestion = quizData[currentQuestionIndex];
+    questionE1.textContent = currentQuestion.question;
+    optionsE1.innerHTML = "";
+
+    currentQuestion.options.forEach((option, index) => {
+        const optionE1 = document.createElement("div");
+        optionE1.textContent = option;
+        optionE1.classList.add("option");
+        optionE1.addEventListener("click", () => selectOption(index));
+        optionsE1.appendChild(optionE1);
+    });
+}
+
+function selectOption(selectedIndex) {
+    const currentQuestion = quizData[currentQuestionIndex];
+    const options = document.querySelectorAll(".option");
+
+    if (selectedIndex === currentQuestion.answer) {
+        options[selectedIndex].classList.add("correct");
+        score++;
+    } else {
+        options[selectedIndex].classList.add("wrong");
+        options[currentQuestion.answer].classList.add("correct");
+    }
+
+    setTimeout(() => {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < quizData.length) {
+            updateProgressBar();
+            loadQuestion();
+        } else {
+            showResults();
+        }
+    }, 2000);
+}
+
+function updateProgressBar() {
+    const progress = ((currentQuestionIndex + 1) / quizData.length) * 100;
+    progressBarFill.style.width = progress + "%";
+}
+
+function showResults() {
+    questionE1.textContent = `Quiz Completed! Your score is ${score}/${quizData.length}`;
+    optionsE1.innerHTML = "";
+    if (score < 8 && attempts < 1) {
+        retryE1.style.display = "block";
+    } else {
+        retryE1.style.display = "none";
+    }
+}
+
+function retryQuiz() {
+    attempts++;
+    if (attempts <= 1) {
+        currentQuestionIndex = 0;
+        score = 0;
+        retryE1.style.display = "none";
+        loadQuestion();
+        updateProgressBar();
+    } else {
+        questionE1.textContent = "No more attempts";
+        optionsE1.innerHTML = "";
+        retryE1.style.display = "none";
+    }
+}
+
+
+loadQuestion();
+updateProgressBar();
+
+
+
+       
+        
+
+   
+
+
+
+
+
+//action
+
+
+
+</script>
+    
+ </body>
+ </html>
